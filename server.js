@@ -43,7 +43,18 @@ app.post("/roblox/user", async (req, res) => {
             });
         }
 
-        res.json(data.data[0]);
+        const user = data.data[0];
+
+        const fullUser = await roblox(
+            `https://users.roblox.com/v1/users/${user.id}`
+        );
+
+        res.json({
+            ...user,
+            created: fullUser.created,
+            description: fullUser.description,
+            isBanned: fullUser.isBanned
+        });
 
     } catch (e) {
         res.status(500).json({
